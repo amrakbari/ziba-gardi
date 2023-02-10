@@ -78,9 +78,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ziba-gardi',
-        'USER': 'amrakbari',  # TODO must be changed in production
-        'PASSWORD': 'Satoshi9717',  # TODO must be changed in production
-        'HOST': 'localhost',  # TODO must be changed in production
+        'USER': 'amrakbari',  # TODO must be read from .env in production
+        'PASSWORD': 'Satoshi9717',  # TODO must be read from .env in production
+        'HOST': 'localhost',  # TODO must be read from .env in production
         'PORT': '5432',
     }
 }
