@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'ziba_gardi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ziba-gardi',
+        'USER': 'amrakbari',  # TODO must be changed in production
+        'PASSWORD': 'Satoshi9717',  # TODO must be changed in production
+        'HOST': 'localhost',  # TODO must be changed in production
+        'PORT': '5432',
     }
 }
 
