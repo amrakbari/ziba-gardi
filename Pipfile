@@ -5,6 +5,12 @@ name = "pypi"
 
 [packages]
 django = "*"
+djoser = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+markdown = "*"
+django-filter = "*"
+drf-spectacular = {extras = ["sidecar"], version = "*"}
 
 [dev-packages]
 
