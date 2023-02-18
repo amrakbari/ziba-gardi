@@ -123,6 +123,12 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'accounts.serializers.UserCreateSerializer'
+    }
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
