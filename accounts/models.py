@@ -12,7 +12,7 @@ class Role(models.Model):
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()
