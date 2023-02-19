@@ -122,13 +122,15 @@ SPECTACULAR_SETTINGS = {
     'REDOC_DIST': 'SIDECAR',
     # OTHER SETTINGS
 }
-
-
 DJOSER = {
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer'
-    }
+    },
+    # 'USER_CREATE_PASSWORD_RETYPE': True,
+    'SEND_ACTIVATION_EMAIL': True,
 }
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
