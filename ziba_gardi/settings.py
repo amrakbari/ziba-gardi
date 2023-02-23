@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import dotenv_values
+
+config = dotenv_values('.env')
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qza@8hclwe=$27263%2n%d^zuctake0#^!^x36=e_9j-y*^@c0'
+SECRET_KEY = config.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,11 +84,11 @@ WSGI_APPLICATION = 'ziba_gardi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ziba-gardi',
-        'USER': 'amrakbari',  # TODO must be read from .env in production
-        'PASSWORD': 'Satoshi9717',  # TODO must be read from .env in production
-        'HOST': 'localhost',  # TODO must be read from .env in production
-        'PORT': '5432',
+        'NAME': config.get('DATABASE_NAME'),
+        'USER': config.get('DATABASE_USER'),
+        'PASSWORD': config.get('DATABASE_PASSWORD'),
+        'HOST': config.get('DATABASE_HOST'),
+        'PORT': config.get('DATABASE_PORT'),
     }
 }
 
@@ -120,14 +125,13 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
-    # OTHER SETTINGS
 }
 DJOSER = {
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer'
     },
-    # 'USER_CREATE_PASSWORD_RETYPE': True,
     'SEND_ACTIVATION_EMAIL': True,
+    'ACTIVATION_URL': config.get('DJOSER_ACTIVATION_URL'),
 }
 
 
@@ -149,6 +153,13 @@ STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+
+EMAIL_HOST = config.get('EMAIL_HOST')
+EMAIL_HOST_USER = config.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config.get('EMAIL_PORT')
+EMAIL_USE_TLS = config.get('EMAIL_USE_TLS')
+DEFAULT_FROM_EMAIL = config.get('DEFAULT_FROM_EMAIL')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
