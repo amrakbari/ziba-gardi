@@ -1,4 +1,4 @@
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from djoser.serializers import UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
