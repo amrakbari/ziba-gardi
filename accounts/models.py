@@ -24,7 +24,6 @@ class Role(models.Model):
     deleted_at = models.DateTimeField(auto_now=True)
 
 
-# Create your models here.
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
@@ -32,3 +31,11 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
+
+
+class Address(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    longitude = models.DecimalField(max_digits=22, decimal_places=16)
+    latitude = models.DecimalField(max_digits=22, decimal_places=16)
