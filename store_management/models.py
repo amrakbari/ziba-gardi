@@ -11,3 +11,7 @@ class Store(models.Model):
     title = models.CharField(max_length=255)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
 
+
+class UsualUserProfile(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
