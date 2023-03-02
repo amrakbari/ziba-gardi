@@ -49,3 +49,5 @@ class Service(models.Model):
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True, null=True)
     store = models.ManyToManyField(Store)
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(auto_now=True)
