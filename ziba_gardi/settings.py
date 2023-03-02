@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
     'djoser',
     'accounts.apps.AccountsConfig',
+    'store_management.apps.StoreManagementConfig',
 ]
 
 MIDDLEWARE = [

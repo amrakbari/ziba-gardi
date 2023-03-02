@@ -12,6 +12,7 @@ markdown = "*"
 django-filter = "*"
 drf-spectacular = {extras = ["sidecar"], version = "*"}
 python-dotenv = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
