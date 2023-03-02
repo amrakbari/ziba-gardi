@@ -28,8 +28,17 @@ class UsualUserProfile(models.Model):
     deleted_at = models.DateTimeField(auto_now=True)
 
 
+class Service(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
+    store = models.ManyToManyField(Store)
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(auto_now=True)
+
+
 class Appointment(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(UsualUserProfile, on_delete=models.CASCADE, null=True, default=None)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
@@ -43,11 +52,3 @@ class Appointment(models.Model):
             )
         except Appointment.DoesNotExist:
             super(Appointment, self).save(*args, **kwargs)
-
-
-class Service(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    description = models.TextField(blank=True, null=True)
-    store = models.ManyToManyField(Store)
-    created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(auto_now=True)
