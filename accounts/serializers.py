@@ -6,7 +6,7 @@ from accounts.models import CustomUser, Address
 class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         model = CustomUser
-        fields = ('id', 'email', 'password', 'first_name', 'last_name', 'role')
+        fields = ('id', 'email', 'password', 'first_name', 'last_name')
 
 
 
