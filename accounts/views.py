@@ -36,3 +36,7 @@ class CreateRetrieveListDeleteUpdateAddressViewSet(mixins.CreateModelMixin,
                                                    viewsets.GenericViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
+
+    def perform_create(self, serializer):
+        serializer.validated_data['user'] = self.request.user
+        serializer.save()

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'djoser',
+    'pytest_django',
     'accounts.apps.AccountsConfig',
     'store_management.apps.StoreManagementConfig',
 ]
