@@ -373,4 +373,5 @@ poetry.toml
 # ruff
 .ruff_cache/
 
+front-template/bootstrap-4.0.0
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,django,python
