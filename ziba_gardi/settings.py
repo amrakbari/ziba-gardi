@@ -15,8 +15,6 @@ from dotenv import dotenv_values
 
 config = dotenv_values('.env')
 
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -135,7 +133,6 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': config.get('DJOSER_ACTIVATION_URL'),
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

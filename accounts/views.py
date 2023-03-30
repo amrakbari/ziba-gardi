@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, permissions
 from datetime import datetime
 import requests
 
@@ -34,8 +34,11 @@ class CreateRetrieveListDeleteUpdateAddressViewSet(mixins.CreateModelMixin,
                                                    mixins.UpdateModelMixin,
                                                    SoftDeleteMixin,
                                                    viewsets.GenericViewSet):
-    queryset = Address.objects.all()
     serializer_class = AddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Address.objects.filter(user_id=self.request.user.id, deleted_at=None)
 
     def perform_create(self, serializer):
         serializer.validated_data['user'] = self.request.user

@@ -4,7 +4,7 @@ from rest_framework.routers import SimpleRouter
 from accounts.views import ActivateUser, CreateRetrieveListDeleteUpdateAddressViewSet
 
 router = SimpleRouter()
-router.register('addresses', CreateRetrieveListDeleteUpdateAddressViewSet)
+router.register('addresses', CreateRetrieveListDeleteUpdateAddressViewSet, basename='addresses')
 
 urlpatterns = [
     path('activate/<str:uid>/<str:token>/', ActivateUser.as_view(), name='activate-user'),

@@ -9,16 +9,15 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         fields = ('id', 'email', 'password', 'first_name', 'last_name')
 
 
-
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = (
             'id',
+            'user',
             'title',
             'description',
             'longitude',
             'latitude',
         )
-        extra_kwargs = {'id': {'read_only': True}}
-
+        extra_kwargs = {'id': {'read_only': True}, 'user': {'read_only': True}}

@@ -17,6 +17,8 @@ pytest = "*"
 baker = "*"
 model-bakery = "*"
 pytest-django = "*"
+pytest-cov = "*"
+pytest-mock = "*"
 
 [dev-packages]
 
