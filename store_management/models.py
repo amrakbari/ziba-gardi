@@ -10,7 +10,7 @@ class StylistProfile(models.Model):
     title = models.CharField(max_length=255)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(default=None, null=True)
 
 
 class Store(models.Model):
@@ -18,14 +18,14 @@ class Store(models.Model):
     title = models.CharField(max_length=255)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(default=None, null=True)
 
 
 class UsualUserProfile(models.Model):
     title = models.CharField(max_length=255)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(default=None, null=True)
 
 
 class Service(models.Model):
@@ -33,7 +33,7 @@ class Service(models.Model):
     description = models.TextField(blank=True, null=True)
     store = models.ManyToManyField(Store)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(default=None, null=True)
 
 
 class Appointment(models.Model):

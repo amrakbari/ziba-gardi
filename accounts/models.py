@@ -27,7 +27,7 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(default=None, null=True)
 
 
 class Address(models.Model):
@@ -37,4 +37,4 @@ class Address(models.Model):
     longitude = models.DecimalField(max_digits=22, decimal_places=16)
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(default=None, null=True)

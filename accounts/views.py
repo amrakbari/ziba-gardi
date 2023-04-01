@@ -1,10 +1,18 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework import mixins, viewsets, permissions
+from datetime import datetime
 import requests
 
+from accounts.models import Address
+from accounts.serializers import AddressSerializer
 
-# Create your views here.
+
+class SoftDeleteMixin:
+    def perform_destroy(self, instance):
+        instance.deleted_at = datetime.utcnow()
+        instance.save()
 
 
 class ActivateUser(GenericAPIView):
@@ -19,3 +27,19 @@ class ActivateUser(GenericAPIView):
         else:
             return Response(response.json())
 
+
+class CreateRetrieveListDeleteUpdateAddressViewSet(mixins.CreateModelMixin,
+                                                   mixins.ListModelMixin,
+                                                   mixins.RetrieveModelMixin,
+                                                   mixins.UpdateModelMixin,
+                                                   SoftDeleteMixin,
+                                                   viewsets.GenericViewSet):
+    serializer_class = AddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Address.objects.filter(user_id=self.request.user.id, deleted_at=None)
+
+    def perform_create(self, serializer):
+        serializer.validated_data['user'] = self.request.user
+        serializer.save()
