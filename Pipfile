@@ -14,6 +14,11 @@ drf-spectacular = {extras = ["sidecar"], version = "*"}
 python-dotenv = "*"
 psycopg2-binary = "*"
 pytest = "*"
+baker = "*"
+model-bakery = "*"
+pytest-django = "*"
+pytest-cov = "*"
+pytest-mock = "*"
 
 [dev-packages]
 
