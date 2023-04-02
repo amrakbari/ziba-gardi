@@ -8,9 +8,9 @@ from accounts.models import CustomUser, Address
 
 @pytest.mark.django_db
 class TestAddAddress:
-    def test_if_created_successfully_return_201(self, api_client):
+    def test_if_created_successfully_return_201(self, authenticated_client):
         user = baker.make(CustomUser, password='rightPass')
-        api_client.force_authenticate(user=user)
+        api_client = authenticated_client(user)
 
         response = api_client.post(path=r'/accounts/addresses/', data={
             'title': 'test',
@@ -20,6 +20,28 @@ class TestAddAddress:
         })
 
         assert response.status_code == 201
+
+    def test_if_user_isnt_authenticated_return_401(self, api_client):
+        response = api_client.post(path=r'/accounts/addresses/', data={
+            'title': 'test',
+            'description': 'test',
+            'longitude': '51.134461088535474',
+            'latitude': '9.707049018543879',
+        })
+
+        assert response.status_code == 401
+
+    def test_if_both_long_lat_are_negative_return_201(self, authenticated_client):
+        user = baker.make(CustomUser, password='rightPass')
+        api_client = authenticated_client(user)
+        response = api_client.post('/accounts/addresses/', data={
+            'title': 'test',
+            'description': 'test',
+            'longitude': '-51.134461088535474',
+            'latitude': '-9.707049018543879',
+        })
+
+        assert response.status_code == status.HTTP_201_CREATED
 
 
 @pytest.mark.django_db
@@ -36,6 +58,7 @@ class TestGetListOfAddresses:
         assert len(response.json()) == 4
         for item in response.json():
             assert item['user'] == user1.id
+
 
 
 
