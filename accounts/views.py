@@ -10,7 +10,7 @@ from accounts.serializers import AddressSerializer
 
 
 class SoftDeleteMixin:
-    def perform_destroy(self, instance):
+    def destroy(self, instance):
         instance.deleted_at = datetime.utcnow()
         instance.save()
 
