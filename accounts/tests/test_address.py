@@ -34,7 +34,7 @@ class TestAddAddress:
     def test_if_both_long_lat_are_negative_return_201(self, authenticated_client):
         user = baker.make(CustomUser, password='rightPass')
         api_client = authenticated_client(user)
-        
+
         response = api_client.post('/accounts/addresses/', data={
             'title': 'test',
             'description': 'test',
@@ -93,7 +93,6 @@ class TestGetSpecificAddress:
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-
     def test_if_not_authenticated_return_401(self, api_client):
         user = baker.make(CustomUser, password='rightPass')
         address = baker.make(Address, user=user)
@@ -101,3 +100,33 @@ class TestGetSpecificAddress:
         response = api_client.get(path=fr'/accounts/addresses/{address.id}/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+@pytest.mark.django_db
+class TestUpdateAddress:
+    def test_if_successful_return_200_and_response_matches_put(self, authenticated_client):
+        user = baker.make(CustomUser, password='rightPass')
+        address = baker.make(Address, user=user)
+        api_client = authenticated_client(user)
+
+        response = api_client.put(path=fr'/accounts/addresses/{address.id}/', data={
+            'title': 'test',
+            'description': 'test',
+            'longitude': '54.134461088535474',
+            'latitude': '9.707049018543879',
+        })
+
+        assert response.status_code == status.HTTP_200_OK
+        assert float(response.json().get('longitude')) == 54.134461088535474
+
+    def test_if_successful_return_200_and_response_matches_patch(self, authenticated_client):
+        user = baker.make(CustomUser, password='rightPass')
+        address = baker.make(Address, user=user)
+        api_client = authenticated_client(user)
+
+        response = api_client.patch(path=fr'/accounts/addresses/{address.id}/', data={
+            'latitude': '9',
+        })
+
+        assert response.status_code == status.HTTP_200_OK
+        assert float(response.json().get('latitude')) == 9
