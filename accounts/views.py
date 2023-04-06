@@ -9,12 +9,6 @@ from accounts.models import Address
 from accounts.serializers import AddressSerializer
 
 
-class SoftDeleteMixin:
-    def perform_destroy(self, instance):
-        instance.deleted_at = datetime.utcnow()
-        instance.save()
-
-
 class ActivateUser(GenericAPIView):
     def get(self, request, uid, token, *args, **kwargs):
         payload = {'uid': uid, 'token': token}
@@ -32,7 +26,7 @@ class CreateRetrieveListDeleteUpdateAddressViewSet(mixins.CreateModelMixin,
                                                    mixins.ListModelMixin,
                                                    mixins.RetrieveModelMixin,
                                                    mixins.UpdateModelMixin,
-                                                   SoftDeleteMixin,
+                                                   mixins.DestroyModelMixin,
                                                    viewsets.GenericViewSet):
     serializer_class = AddressSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -43,3 +37,7 @@ class CreateRetrieveListDeleteUpdateAddressViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer):
         serializer.validated_data['user'] = self.request.user
         serializer.save()
+
+    def perform_destroy(self, instance):
+        instance.deleted_at = datetime.utcnow()
+        instance.save()
