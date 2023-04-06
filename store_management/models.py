@@ -6,9 +6,15 @@ from django.db.models import Q
 from accounts.models import CustomUser, Address
 
 
-
 class UserProfile(models.Model):
+    STYLIST = 'ST'
+    USUAL_USER = 'US'
+    PROFILE_ROLE_CHOICES = [
+        (STYLIST, 'Stylist'),
+        (USUAL_USER, 'Usual'),
+    ]
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+    role = models.CharField(max_length=2, choices=PROFILE_ROLE_CHOICES, default=USUAL_USER)
     birth_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(default=None, null=True)
