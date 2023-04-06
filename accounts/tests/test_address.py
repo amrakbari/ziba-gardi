@@ -130,3 +130,32 @@ class TestUpdateAddress:
 
         assert response.status_code == status.HTTP_200_OK
         assert float(response.json().get('latitude')) == 9
+
+    def test_if_not_authenticated_return_401(self, api_client):
+        user = baker.make(CustomUser, password='rightPass')
+        address = baker.make(Address, user=user)
+
+        response = api_client.put(path=fr'/accounts/addresses/{address.id}/', data={
+            'title': 'test',
+            'description': 'test',
+            'longitude': '54.134461088535474',
+            'latitude': '9.707049018543879',
+        })
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_address_not_for_current_user_authenticated_return_404(self, authenticated_client):
+        user1 = baker.make(CustomUser, password='rightPass')
+        user2 = baker.make(CustomUser, password='rightPass')
+        user1_address = baker.make(Address, user=user1)
+        user2_address = baker.make(Address, user=user2)
+        api_client = authenticated_client(user1)
+
+        response = api_client.put(path=fr'/accounts/addresses/{user2_address.id}/', data={
+            'title': 'test',
+            'description': 'test',
+            'longitude': '54.134461088535474',
+            'latitude': '9.707049018543879',
+        })
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
