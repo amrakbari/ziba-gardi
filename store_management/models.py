@@ -17,7 +17,6 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=2, choices=PROFILE_ROLE_CHOICES, default=USUAL_USER)
     birth_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(default=None, null=True)
 
 
 class Store(models.Model):
