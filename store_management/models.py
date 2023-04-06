@@ -6,22 +6,18 @@ from django.db.models import Q
 from accounts.models import CustomUser, Address
 
 
-class StylistProfile(models.Model):
+
+class UserProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+    birth_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(default=None, null=True)
 
 
 class Store(models.Model):
-    stylist = models.ForeignKey(StylistProfile, on_delete=models.SET_NULL, null=True)
+    stylist = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(default=None, null=True)
-
-
-class UsualUserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(default=None, null=True)
 
@@ -37,7 +33,7 @@ class Service(models.Model):
 class Appointment(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
-    user = models.ForeignKey(UsualUserProfile, on_delete=models.CASCADE, null=True, default=None)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, default=None)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
 
