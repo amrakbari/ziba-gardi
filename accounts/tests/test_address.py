@@ -21,7 +21,7 @@ class TestAddAddress:
 
         assert response.status_code == 201
 
-    def test_if_user_isnt_authenticated_return_401(self, api_client):
+    def test_if_user_is_not_authenticated_return_401(self, api_client):
         response = api_client.post(path=r'/accounts/addresses/', data={
             'title': 'test',
             'description': 'test',
@@ -59,6 +59,11 @@ class TestGetListOfAddresses:
         for item in response.json():
             assert item['user'] == user1.id
 
+    def test_if_not_authenticated_return_401(self, api_client):
+        user1 = baker.make(CustomUser, password='rightPass')
+        user1_addresses = baker.make(Address, 4, user=user1)
+        response = api_client.get(path=r'/accounts/addresses/', headers={'Content-Type': 'application/json'})
 
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
