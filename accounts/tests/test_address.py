@@ -67,3 +67,34 @@ class TestGetListOfAddresses:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
+@pytest.mark.django_db
+class TestGetSpecificAddress:
+    def test_if_sucessfull_return_200_and_response_matches(self, authenticated_client):
+        user = baker.make(CustomUser, password='rightPass')
+        address = baker.make(Address, user=user)
+        api_client = authenticated_client(user=user)
+
+        response = api_client.get(path=fr'/accounts/addresses/{address.id}/')
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json().get('user') == user.id
+
+    def test_if_address_is_not_for_current_user_return_404(self, authenticated_client):
+        user1 = baker.make(CustomUser, password='rightPass')
+        user2 = baker.make(CustomUser, password='rightPass')
+        user1_address = baker.make(Address, user=user1)
+        user2_address = baker.make(Address, user=user2)
+        api_client = authenticated_client(user1)
+
+        response = api_client.get(path=fr'/accounts/addresses/{user2_address.id}/')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+    def test_if_not_authenticated_return_401(self, api_client):
+        user = baker.make(CustomUser, password='rightPass')
+        address = baker.make(Address, user=user)
+
+        response = api_client.get(path=fr'/accounts/addresses/{address.id}/')
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
