@@ -12,7 +12,7 @@ class TestCreateProfile:
     def test_if_successful_return_201(self, api_client):
         user = baker.make(CustomUser)
 
-        response = api_client.post(path=fr'/store/stylist-profiles/', data={
+        response = api_client.post(path=fr'/store/profiles/', data={
             'user': user.id,
             'role': 'US',
             'birth_date': '2017-11-01T00:00:00',
@@ -24,7 +24,7 @@ class TestCreateProfile:
         user = baker.make(CustomUser)
         profile = baker.make(UserProfile, user=user)
 
-        response = api_client.post(path=fr'/store/stylist-profiles/', data={
+        response = api_client.post(path=fr'/store/profiles/', data={
             'user': user.id,
             'role': 'US',
             'birth_date': '2017-11-01T00:00:00',
@@ -35,7 +35,7 @@ class TestCreateProfile:
     def test_if_role_is_not_acceptable_return_400(self, api_client):
         user = baker.make(CustomUser)
 
-        response = api_client.post(path=fr'/store/stylist-profiles/', data={
+        response = api_client.post(path=fr'/store/profiles/', data={
             'user': user.id,
             'role': 'NA',
             'birth_date': '2017-11-01T00:00:00',
@@ -50,7 +50,7 @@ class TestUpdateProfile:
         user = baker.make(CustomUser)
         api_client = authenticated_client(user)
 
-        response = api_client.put(path=fr'/store/stylist-profiles/', data={
+        response = api_client.put(path=fr'/store/profiles/', data={
             'role': 'US',
             'birth_date': '2020-11-01T00:00:00',
         })
@@ -62,7 +62,7 @@ class TestUpdateProfile:
         user = baker.make(CustomUser)
         api_client = authenticated_client(user)
 
-        response = api_client.patch(path=fr'/store/stylist-profiles/', data={
+        response = api_client.patch(path=fr'/store/profiles/', data={
             'birth_date': '2020-11-01T00:00:00',
         })
 
@@ -73,7 +73,7 @@ class TestUpdateProfile:
         user = baker.make(CustomUser)
         api_client = authenticated_client(user)
 
-        response = api_client.patch(path=fr'/store/stylist-profiles/', data={
+        response = api_client.patch(path=fr'/store/profiles/', data={
             'birth_date': '2020-11-01T00:00:00',
         })
 
