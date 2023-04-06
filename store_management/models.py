@@ -7,7 +7,6 @@ from accounts.models import CustomUser, Address
 
 
 class StylistProfile(models.Model):
-    title = models.CharField(max_length=255)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(default=None, null=True)
@@ -22,7 +21,6 @@ class Store(models.Model):
 
 
 class UsualUserProfile(models.Model):
-    title = models.CharField(max_length=255)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(default=None, null=True)
