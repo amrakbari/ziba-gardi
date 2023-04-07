@@ -8,8 +8,6 @@ from store_management.serializers import UserProfileSerializer
 
 
 class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
-                                  mixins.UpdateModelMixin,
-                                  mixins.RetrieveModelMixin,
                                   viewsets.GenericViewSet):
     serializer_class = UserProfileSerializer
 
@@ -25,3 +23,14 @@ class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    @action(
+        methods=['PATCH'],
+        detail=False,
+    )
+    def update_current_user_profile(self, request):
+        profile = get_object_or_404(self.get_queryset())
+        serializer = self.get_serializer(data=request.data, instance=profile, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
