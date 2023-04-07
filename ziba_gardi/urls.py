@@ -22,6 +22,7 @@ urlpatterns = [
     path(r'auth/', include('djoser.urls')),
     path(r'auth/', include('djoser.urls.jwt')),
     path(r'accounts/', include('accounts.urls')),
+    path(r'store/', include('store_management.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
