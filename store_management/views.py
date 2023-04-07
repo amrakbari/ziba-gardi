@@ -17,6 +17,7 @@ class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
     @action(
         methods=['GET'],
         detail=False,
+        permission_classes=[permissions.IsAuthenticated],
     )
     def get_current_user_profile(self, request):
         instance = get_object_or_404(self.get_queryset())
@@ -26,6 +27,7 @@ class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
     @action(
         methods=['PATCH'],
         detail=False,
+        permission_classes=[permissions.IsAuthenticated]
     )
     def update_current_user_profile(self, request):
         profile = get_object_or_404(self.get_queryset())

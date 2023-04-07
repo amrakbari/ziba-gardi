@@ -66,6 +66,7 @@ class TestGetProfile:
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
+
 @pytest.mark.django_db
 class TestUpdateProfile:
     def test_if_successful_return_200_and_response_matches_patch(self, authenticated_client):
@@ -80,15 +81,12 @@ class TestUpdateProfile:
         assert response.status_code == status.HTTP_200_OK
         assert response.json().get('birth_date') == '2020-11-01T00:00:00Z'
 
-    def test_if_not_authenticated_return_401(self, authenticated_client):
+    def test_if_not_authenticated_return_401(self, api_client):
         user = baker.make(CustomUser)
         profile = baker.make(UserProfile, user=user)
-        api_client = authenticated_client(user)
 
         response = api_client.patch(path=fr'/store/profiles/update_current_user_profile/', data={
             'birth_date': '2020-11-01T00:00:00',
         })
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
-
