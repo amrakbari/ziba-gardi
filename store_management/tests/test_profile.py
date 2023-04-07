@@ -45,6 +45,28 @@ class TestCreateProfile:
 
 
 @pytest.mark.django_db
+class TestGetProfile:
+    def test_if_successful_return_200_and_response_matches(self, authenticated_client):
+        user1 = baker.make(CustomUser)
+        user2 = baker.make(CustomUser)
+        user1_profile = baker.make(UserProfile, user=user1)
+        user2_profile = baker.make(UserProfile, user=user2)
+        api_client = authenticated_client(user2)
+
+        response = api_client.get(path=r'/store/profiles/get_current_user_profile/')
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json().get('user') == user2.id
+
+    def test_if_not_authenticated_return_401(self, api_client):
+        user = baker.make(CustomUser)
+        profile = baker.make(UserProfile, user=user)
+
+        response = api_client.get(path=r'/store/profiles/get_current_user_profile/')
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+@pytest.mark.django_db
 class TestUpdateProfile:
     def test_if_successful_return_200_and_response_matches_put(self, authenticated_client):
         user = baker.make(CustomUser)
