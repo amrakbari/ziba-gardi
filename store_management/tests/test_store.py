@@ -130,11 +130,40 @@ class TestRetrieveStore:
 
 @pytest.mark.django_db
 class TestUpdateStorePut:
-    def test_if_successful_return_200_and_response_matches(self, authenticated_client): ...
+    def test_if_successful_return_200_and_response_matches(self, authenticated_client):
+        user = baker.make(CustomUser)
+        address1 = baker.make(Address, user=user)
+        address2 = baker.make(Address, user=user)
+        store = baker.make(Store, user=user, address=address1)
+        sample_data = {
+            'title': 'test update',
+            'address': address2.id
+        }
+        api_client = authenticated_client(user)
 
-    def test_if_not_authenticated_return_401(self, api_client): ...
+        response = api_client.put(path=fr'/accounts/stores/{store.id}/', data=sample_data)
 
-    def test_if_store_id_is_not_for_the_current_user(self, authenticated_client): ...
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json().get('title') == sample_data.get('title')
+        assert response.json().get('address') == sample_data.get('address')
+
+    def test_if_not_authenticated_return_401(self, api_client):
+        user = baker.make(CustomUser)
+        address1 = baker.make(Address, user=user)
+        address2 = baker.make(Address, user=user)
+        store = baker.make(Store, user=user, address=address1)
+        sample_data = {
+            'title': 'test update',
+            'address': address2
+        }
+
+        response = api_client.put(path=fr'/accounts/stores/{store.id}/', data=sample_data)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_store_id_is_not_for_the_current_user_return_404(self, authenticated_client): ...
+
+    def test_if_address_id_is_not_for_the_current_user_return_404(self, authenticated_client): ...
 
 
 @pytest.mark.django_db
