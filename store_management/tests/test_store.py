@@ -3,15 +3,51 @@ from rest_framework import status
 
 from model_bakery import baker
 
+from accounts.models import Address
+from store_management.models import Store, UserProfile
+
 
 @pytest.mark.django_db
 class TestCreateStore:
-    def test_if_created_successfully_return_201(self, authenticated_client): ...
+    def test_if_created_successfully_return_201(self, authenticated_client):
+        user = baker.make(Store)
+        profile = baker.make(UserProfile, user=user)
+        address = baker.make(Address, user=user)
+        api_client = authenticated_client(user)
 
-    def test_if_not_authenticated_return_401(self, api_client): ...
+        response = api_client.post(path=r'/accounts/stores/', data={
+            'title': 'sample store',
+            'address': address.id,
+        })
 
-    def test_address_does_not_exist_return_404(self, authenticated_client): ...
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.json().get('stylist') == profile
 
+    def test_if_not_authenticated_return_401(self, api_client):
+        user = baker.make(Store)
+        profile = baker.make(UserProfile, user=user)
+        address = baker.make(Address, user=user)
+
+        response = api_client.post(path=r'/accounts/stores/', data={
+            'title': 'sample store',
+            'address': address.id,
+        })
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_address_does_not_exist_return_404_or_not_for_current_user(self, authenticated_client):
+        user = baker.make(Store)
+        profile = baker.make(UserProfile, user=user)
+        address = baker.make(Address, user=user)
+        api_client = authenticated_client(user)
+
+        response = api_client.post(path=r'/accounts/stores/', data={
+            'title': 'sample store',
+            'address': address.id + 1,
+        })
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.json().get('stylist') == profile
 
 
 @pytest.mark.django_db
