@@ -91,11 +91,41 @@ class TestListStore:
 
 @pytest.mark.djamgo_db
 class TestRetrieveStore:
-    def test_if_successful_return_200_and_response_matches(self, authenticated_client): ...
+    def test_if_successful_return_200_and_response_matches(self, authenticated_client):
+        user1 = baker.make(CustomUser)
+        user2 = baker.make(CustomUser)
+        user1_addr = baker.make(Address, user=user1)
+        user2_addr = baker.make(Address, user=user2)
+        user1_store = baker.make(Store, user=user1, address=user1_addr)
+        user2_stores = baker.make(Store, 5, user=user2, address=user2_addr)
+        api_client = authenticated_client(user1)
 
-    def test_if_not_authenticated_return_401(self, api_client): ...
+        response = api_client.get(path=fr'/accounts/stores/{user1_store.id}/')
 
-    def test_if_store_id_is_not_for_the_current_user_return_404(self, authenticated_client): ...
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json().get('id') == user1_store.id
+
+    def test_if_not_authenticated_return_401(self, api_client):
+        user = baker.make(CustomUser)
+        address = baker.make(Address, user=user)
+        store = baker.make(Store, user=user, address=address)
+
+        response = api_client.get(path=fr'/accounts/stores/{store.id}/')
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_store_id_is_not_for_the_current_user_return_404(self, authenticated_client):
+        user1 = baker.make(CustomUser)
+        user2 = baker.make(CustomUser)
+        user1_addr = baker.make(Address, user=user1)
+        user2_addr = baker.make(Address, user=user2)
+        user1_store = baker.make(Store, user=user1, address=user1_addr)
+        user2_store = baker.make(Store, user=user2, address=user2_addr)
+        api_client = authenticated_client(user1)
+
+        response = api_client.get(path=fr'/accounts/stores/{user2_store.id}/')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.django_db
