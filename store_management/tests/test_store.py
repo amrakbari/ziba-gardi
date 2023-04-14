@@ -57,8 +57,10 @@ class TestListStore:
         user2 = baker.make(CustomUser)
         user1_addr = baker.make(Address, user=user1)
         user2_addr = baker.make(Address, user=user2)
-        user1_stores = baker.make(Store, 4, user=user1, address=user1_addr)
-        user2_stores = baker.make(Store, 5, user=user2, address=user2_addr)
+        user1_profile = baker.make(UserProfile, user=user1)
+        user2_profile = baker.make(UserProfile, user=user2)
+        user1_stores = baker.make(Store, 4, stylist=user1_profile, address=user1_addr)
+        user2_stores = baker.make(Store, 5, stylist=user2_profile, address=user2_addr)
         api_client = authenticated_client(user1)
 
         response = api_client.get(path=r'/accounts/stores/')
@@ -69,7 +71,8 @@ class TestListStore:
     def test_if_not_authenticated_return_401(self, api_client):
         user1 = baker.make(CustomUser)
         address = baker.make(Address, user=user1)
-        stores = baker.make(Store, 4, user=user1, address=address)
+        profile = baker.make(UserProfile, user=user1)
+        stores = baker.make(Store, 4, stylist=profile, address=address)
 
         response = api_client.get(path=r'/accounts/stores/')
 
@@ -80,7 +83,9 @@ class TestListStore:
         user2 = baker.make(CustomUser)
         user1_addr = baker.make(Address, user=user1)
         user2_addr = baker.make(Address, user=user2)
-        user2_stores = baker.make(Store, 5, user=user2, address=user2_addr)
+        user1_profile = baker.make(UserProfile, user=user1)
+        user2_profile = baker.make(UserProfile, user=user2)
+        user2_stores = baker.make(Store, 5, stylist=user2_profile, address=user2_addr)
         api_client = authenticated_client(user1)
 
         response = api_client.get(path=r'/accounts/stores/')
@@ -96,8 +101,10 @@ class TestRetrieveStore:
         user2 = baker.make(CustomUser)
         user1_addr = baker.make(Address, user=user1)
         user2_addr = baker.make(Address, user=user2)
-        user1_store = baker.make(Store, user=user1, address=user1_addr)
-        user2_stores = baker.make(Store, 5, user=user2, address=user2_addr)
+        user1_profile = baker.make(UserProfile, user=user1)
+        user2_profile = baker.make(UserProfile, user=user2)
+        user1_store = baker.make(Store, stylist=user1_profile, address=user1_addr)
+        user2_stores = baker.make(Store, 5, stylist=user2_profile, address=user2_addr)
         api_client = authenticated_client(user1)
 
         response = api_client.get(path=fr'/accounts/stores/{user1_store.id}/')
@@ -108,7 +115,8 @@ class TestRetrieveStore:
     def test_if_not_authenticated_return_401(self, api_client):
         user = baker.make(CustomUser)
         address = baker.make(Address, user=user)
-        store = baker.make(Store, user=user, address=address)
+        profile = baker.make(UserProfile, user=user)
+        store = baker.make(Store, stylist=profile, address=address)
 
         response = api_client.get(path=fr'/accounts/stores/{store.id}/')
 
@@ -119,8 +127,10 @@ class TestRetrieveStore:
         user2 = baker.make(CustomUser)
         user1_addr = baker.make(Address, user=user1)
         user2_addr = baker.make(Address, user=user2)
-        user1_store = baker.make(Store, user=user1, address=user1_addr)
-        user2_store = baker.make(Store, user=user2, address=user2_addr)
+        user1_profile = baker.make(UserProfile, user=user1)
+        user2_profile = baker.make(UserProfile, user=user2)
+        user1_store = baker.make(Store, stylist=user1_profile, address=user1_addr)
+        user2_store = baker.make(Store, stylist=user2_profile, address=user2_addr)
         api_client = authenticated_client(user1)
 
         response = api_client.get(path=fr'/accounts/stores/{user2_store.id}/')
@@ -134,7 +144,8 @@ class TestUpdateStorePut:
         user = baker.make(CustomUser)
         address1 = baker.make(Address, user=user)
         address2 = baker.make(Address, user=user)
-        store = baker.make(Store, user=user, address=address1)
+        profile = baker.make(UserProfile, user=user)
+        store = baker.make(Store, stylist=profile, address=address1)
         sample_data = {
             'title': 'test update',
             'address': address2.id
@@ -151,7 +162,8 @@ class TestUpdateStorePut:
         user = baker.make(CustomUser)
         address1 = baker.make(Address, user=user)
         address2 = baker.make(Address, user=user)
-        store = baker.make(Store, user=user, address=address1)
+        profile = baker.make(UserProfile, user=user)
+        store = baker.make(Store, stylist=profile, address=address1)
         sample_data = {
             'title': 'test update',
             'address': address2.id
@@ -169,8 +181,8 @@ class TestUpdateStorePut:
         user2_address = baker.make(Address, user=user2)
         user1_profile = baker.make(UserProfile, user=user1)
         user2_profile = baker.make(UserProfile, user=user2)
-        user1_store = baker.make(Store, user=user1, address=user1_address1)
-        user2_store = baker.make(Store, user=user2, address=user2_address)
+        user1_store = baker.make(Store, stylist=user1_profile, address=user1_address1)
+        user2_store = baker.make(Store, stylist=user2_profile, address=user2_address)
         api_client = authenticated_client(user1)
 
         sample_data = {
@@ -188,8 +200,8 @@ class TestUpdateStorePut:
         user2_address = baker.make(Address, user=user2)
         user1_profile = baker.make(UserProfile, user=user1)
         user2_profile = baker.make(UserProfile, user=user2)
-        user1_store = baker.make(Store, user=user1, address=user1_address)
-        user2_store = baker.make(Store, user=user2, address=user2_address)
+        user1_store = baker.make(Store, stylist=user1_profile, address=user1_address)
+        user2_store = baker.make(Store, stylist=user2_profile, address=user2_address)
         api_client = authenticated_client(user1)
 
         sample_data = {
@@ -206,7 +218,8 @@ class TestUpdateStorePatch:
         user = baker.make(CustomUser)
         address1 = baker.make(Address, user=user)
         address2 = baker.make(Address, user=user)
-        store = baker.make(Store, user=user, address=address1)
+        profile = baker.make(UserProfile, user=user)
+        store = baker.make(Store, stylist=profile, address=address1)
 
         sample_data = {
             'address': address2.id
@@ -221,7 +234,8 @@ class TestUpdateStorePatch:
         user = baker.make(CustomUser)
         address1 = baker.make(Address, user=user)
         address2 = baker.make(Address, user=user)
-        store = baker.make(Store, user=user, address=address1)
+        profile = baker.make(UserProfile, user=user)
+        store = baker.make(Store, stylist=profile, address=address1)
         sample_data = {
             'address': address2.id
         }
@@ -238,8 +252,8 @@ class TestUpdateStorePatch:
         user2_address = baker.make(Address, user=user2)
         user1_profile = baker.make(UserProfile, user=user1)
         user2_profile = baker.make(UserProfile, user=user2)
-        user1_store = baker.make(Store, user=user1, address=user1_address1)
-        user2_store = baker.make(Store, user=user2, address=user2_address)
+        user1_store = baker.make(Store, stylist=user1_profile, address=user1_address1)
+        user2_store = baker.make(Store, stylist=user2_profile, address=user2_address)
         api_client = authenticated_client(user1)
 
         sample_data = {
@@ -256,8 +270,8 @@ class TestUpdateStorePatch:
         user2_address = baker.make(Address, user=user2)
         user1_profile = baker.make(UserProfile, user=user1)
         user2_profile = baker.make(UserProfile, user=user2)
-        user1_store = baker.make(Store, user=user1, address=user1_address)
-        user2_store = baker.make(Store, user=user2, address=user2_address)
+        user1_store = baker.make(Store, stylist=user1_profile, address=user1_address)
+        user2_store = baker.make(Store, stylist=user2_profile, address=user2_address)
         api_client = authenticated_client(user1)
 
         sample_data = {
@@ -274,7 +288,7 @@ class TestDeleteStore:
         user = baker.make(CustomUser)
         address = baker.make(Address, user=user)
         profile = baker.make(UserProfile, user=user)
-        store = baker.make(Store, user=user, address=address)
+        store = baker.make(Store, stylist=profile, address=address)
         api_client = authenticated_client(user)
 
         response = api_client.delete(path=fr'/accounts/store/{store}/')
