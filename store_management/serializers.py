@@ -1,6 +1,9 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-from store_management.models import UserProfile
+from accounts.models import CustomUser
+from store_management.models import UserProfile, Store
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -13,3 +16,29 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'created_at',
         )
         extra_kwargs = {'created_at': {'read_only': True}}
+
+
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'stylist',
+            'title',
+            'address',
+            'created_at',
+            'deleted_at',
+        )
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'created_at': {'read_only': True},
+            'deleted_at': {'read_only': True},
+            'stylist': {'read_only': True}
+        }
+
+    def validate(self, attrs):
+        request = self.context.get('request')
+        current_user = CustomUser.objects.get(pk=request.user.id)
+        if not current_user.address_set.filter(pk=attrs['address'].id):
+            raise ValidationError("address must be for the current user")
+        return attrs
