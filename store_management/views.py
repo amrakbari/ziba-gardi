@@ -40,12 +40,12 @@ class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
         return Response(serializer.errors)
 
 
-class CreateRetrieveListUpdateDestroyProfile(mixins.CreateModelMixin,
-                                             mixins.RetrieveModelMixin,
-                                             mixins.ListModelMixin,
-                                             mixins.UpdateModelMixin,
-                                             mixins.DestroyModelMixin,
-                                             viewsets.GenericViewSet):
+class CreateRetrieveListUpdateDestroyStore(mixins.CreateModelMixin,
+                                           mixins.RetrieveModelMixin,
+                                           mixins.ListModelMixin,
+                                           mixins.UpdateModelMixin,
+                                           mixins.DestroyModelMixin,
+                                           viewsets.GenericViewSet):
     serializer_class = StoreSerializer
     permission_classes = [permissions.IsAuthenticated]
 
