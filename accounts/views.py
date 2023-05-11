@@ -12,7 +12,7 @@ class ActivateUser(GenericAPIView):
     def get(self, request, uid, token, *args, **kwargs):
         payload = {'uid': uid, 'token': token}
 
-        url = "http://0.0.0.0:8001/auth/users/activation/"
+        url = "http://amirak.ml:8001/auth/users/activation/"
         response = requests.post(url, data=payload)
 
         if response.status_code == 204:
