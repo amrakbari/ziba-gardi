@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+
+import dotenv
 from dotenv import dotenv_values
 
+dotenv.load_dotenv('.env')
 config = dotenv_values('.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -87,7 +90,7 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_NAME'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
     }
 }
