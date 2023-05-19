@@ -9,10 +9,13 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+import dotenv
 from dotenv import dotenv_values
 
+dotenv.load_dotenv('.env')
 config = dotenv_values('.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -84,11 +87,11 @@ WSGI_APPLICATION = 'ziba_gardi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config.get('DATABASE_NAME'),
-        'USER': config.get('DATABASE_USER'),
-        'PASSWORD': config.get('DATABASE_PASSWORD'),
-        'HOST': config.get('DATABASE_HOST'),
-        'PORT': config.get('DATABASE_PORT'),
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': '5432',
     }
 }
 
