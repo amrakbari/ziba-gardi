@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from accounts.models import CustomUser
-from store_management.models import UserProfile, Store
+from store_management.models import UserProfile, Store, Appointment
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -42,3 +42,15 @@ class StoreSerializer(serializers.ModelSerializer):
         if not current_user.address_set.filter(pk=attrs['address'].id):
             raise ValidationError("address must be for the current user")
         return attrs
+
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = (
+            'id',
+            'store',
+            'service',
+            'start_datetime',
+            'end_datetime',
+        )

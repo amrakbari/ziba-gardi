@@ -5,8 +5,8 @@ from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from store_management.models import UserProfile, Store
-from store_management.serializers import UserProfileSerializer, StoreSerializer
+from store_management.models import UserProfile, Store, Appointment
+from store_management.serializers import UserProfileSerializer, StoreSerializer, AppointmentSerializer
 
 
 class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
@@ -67,4 +67,16 @@ class CreateRetrieveListUpdateDestroyStore(mixins.CreateModelMixin,
     def perform_destroy(self, instance):
         instance.deleted_at = datetime.utcnow()
         instance.save()
+
+
+class CreateRetrieveListDestroyUpdateAppointment(mixins.CreateModelMixin,
+                                                 mixins.RetrieveModelMixin,
+                                                 mixins.ListModelMixin,
+                                                 mixins.DestroyModelMixin,
+                                                 mixins.UpdateModelMixin,
+                                                 viewsets.GenericViewSet):
+    serializer_class = AppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]  # TODO add is_stylist permission
+    queryset = Appointment.objects.all()
+
 

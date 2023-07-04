@@ -53,8 +53,7 @@ class AddressSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'title',
-            'description',
-            'longitude',
+            'neighbourhood'
             'latitude',
         )
         extra_kwargs = {'id': {'read_only': True}, 'user': {'read_only': True}}
