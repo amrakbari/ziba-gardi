@@ -9,7 +9,7 @@ from store_management.models import UserProfile
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     role = serializers.CharField(write_only=True)
-    birth_date = serializers.CharField(write_only=True)
+    birth_date = serializers.DateField(write_only=True)
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = CustomUser
@@ -18,10 +18,6 @@ class UserCreateSerializer(BaseUserCreateSerializer):
     def validate(self, attrs):
         self.fields.pop("re_password", None)
         re_password = attrs.pop("re_password")
-        try:
-            datetime.strptime(attrs['birth_date'], "%m/%d/%Y")
-        except ValueError:
-            raise serializers.ValidationError("invalid date format")
         if attrs["password"] == re_password:
             return attrs
         else:
@@ -33,14 +29,14 @@ class UserCreateSerializer(BaseUserCreateSerializer):
                 email=validated_data['email'],
                 first_name=validated_data['first_name'],
                 last_name=validated_data['last_name'],
+                is_active=False,
             )
             user.set_password(validated_data['password'])
             user.save()
-            birth_date = datetime.strptime(validated_data['birth_date'], "%m/%d/%Y")
             profile = UserProfile.objects.create(
                 user=user,
                 role=validated_data['role'],
-                birth_date=birth_date,
+                birth_date=validated_data['birth_date'],
             )
             profile.save()
         return user
@@ -53,7 +49,7 @@ class AddressSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'title',
+            'description',
             'neighbourhood'
-            'latitude',
         )
         extra_kwargs = {'id': {'read_only': True}, 'user': {'read_only': True}}

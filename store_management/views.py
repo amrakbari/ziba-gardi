@@ -5,8 +5,9 @@ from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from store_management.models import UserProfile, Store, Appointment
-from store_management.serializers import UserProfileSerializer, StoreSerializer, AppointmentSerializer
+from store_management.models import UserProfile, Store, Appointment, Service
+from store_management.serializers import UserProfileSerializer, StoreSerializer, AppointmentSerializer, \
+    ServiceSerializer
 
 
 class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
@@ -80,3 +81,10 @@ class CreateRetrieveListDestroyUpdateAppointment(mixins.CreateModelMixin,
     queryset = Appointment.objects.all()
 
 
+class CreateRetrieveListService(mixins.CreateModelMixin,
+                                mixins.RetrieveModelMixin,
+                                mixins.ListModelMixin,
+                                viewsets.GenericViewSet):
+    serializer_class = ServiceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Service.objects.all()

@@ -19,6 +19,7 @@ model-bakery = "*"
 pytest-django = "*"
 pytest-cov = "*"
 pytest-mock = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

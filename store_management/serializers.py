@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from accounts.models import CustomUser
-from store_management.models import UserProfile, Store, Appointment
+from store_management.models import UserProfile, Store, Appointment, Service
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -45,6 +45,8 @@ class StoreSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    start_datetime = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
+    end_datetime = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
     class Meta:
         model = Appointment
         fields = (
@@ -54,3 +56,19 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'start_datetime',
             'end_datetime',
         )
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = (
+            'id',
+            'title',
+            'description',
+        )
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
