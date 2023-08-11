@@ -4,10 +4,25 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import generics
 
 from store_management.models import UserProfile, Store, Appointment, Service
 from store_management.serializers import UserProfileSerializer, StoreSerializer, AppointmentSerializer, \
     ServiceSerializer
+
+
+class CurrentUserStoresList(generics.ListAPIView):
+    serializer_class = StoreSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({'request': self.request})
+        return context
+
+    def get_queryset(self):
+        current_user_profile = UserProfile.objects.get(user_id=self.request.user.id)
+        return Store.objects.filter(stylist=current_user_profile)
 
 
 class CreateUpdateRetrieveProfile(mixins.CreateModelMixin,
@@ -57,7 +72,8 @@ class CreateRetrieveListUpdateDestroyStore(mixins.CreateModelMixin,
 
     def get_queryset(self):
         current_user_profile = UserProfile.objects.get(user_id=self.request.user.id)
-        return Store.objects.filter(stylist=current_user_profile)
+        # return Store.objects.filter(stylist=current_user_profile)
+        return Store.objects.all()
 
     def perform_create(self, serializer):
         current_user_profile = UserProfile.objects.get(user_id=self.request.user.id)

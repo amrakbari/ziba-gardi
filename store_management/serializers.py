@@ -7,6 +7,8 @@ from store_management.models import UserProfile, Store, Appointment, Service
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
     class Meta:
         model = UserProfile
         fields = (
@@ -15,7 +17,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'birth_date',
             'created_at',
         )
-        extra_kwargs = {'created_at': {'read_only': True}}
+        extra_kwargs = {
+            'created_at': {'read_only': True},
+        }
 
 
 class StoreSerializer(serializers.ModelSerializer):

@@ -135,7 +135,8 @@ SPECTACULAR_SETTINGS = {
 }
 DJOSER = {
     'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer'
+        'user_create': 'accounts.serializers.UserCreateSerializer',
+        'current_user': 'accounts.serializers.CurrentUserSerializer',
     },
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': config.get('DJOSER_ACTIVATION_URL'),

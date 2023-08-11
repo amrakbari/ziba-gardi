@@ -2,9 +2,17 @@ from datetime import datetime
 
 from django.db import transaction
 from djoser.serializers import UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer
+from djoser.serializers import UserSerializer
 from rest_framework import serializers
 from accounts.models import CustomUser, Address
 from store_management.models import UserProfile
+
+
+class CurrentUserSerializer(UserSerializer):
+
+    class Meta(UserSerializer.Meta):
+        model = CustomUser
+        fields = ('id', 'email', 'first_name', 'last_name')
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
