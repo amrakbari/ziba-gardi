@@ -7,8 +7,6 @@ from store_management.models import UserProfile, Store, Appointment, Service
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
     class Meta:
         model = UserProfile
         fields = (
