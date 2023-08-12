@@ -4,7 +4,7 @@ from django.db import transaction
 from djoser.serializers import UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer
 from rest_framework import serializers
-from accounts.models import CustomUser, Address
+from accounts.models import CustomUser, Address, Neighbourhood
 from store_management.models import UserProfile
 
 
@@ -61,3 +61,12 @@ class AddressSerializer(serializers.ModelSerializer):
             'neighbourhood'
         )
         extra_kwargs = {'id': {'read_only': True}, 'user': {'read_only': True}}
+
+
+class NeighbourhoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Neighbourhood
+        fields = (
+            'id',
+            'title',
+        )

@@ -6,8 +6,8 @@ from rest_framework import mixins, viewsets, permissions
 from datetime import datetime
 import requests
 
-from accounts.models import Address
-from accounts.serializers import AddressSerializer
+from accounts.models import Address, Neighbourhood
+from accounts.serializers import AddressSerializer, NeighbourhoodSerializer
 
 
 class ActivateUser(GenericAPIView):
@@ -46,3 +46,9 @@ class CreateRetrieveListDeleteUpdateAddressViewSet(mixins.CreateModelMixin,
     def perform_destroy(self, instance):
         instance.deleted_at = datetime.utcnow()
         instance.save()
+
+
+class ListNeighbourhoodViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    serializer_class = NeighbourhoodSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Neighbourhood.objects.all()
