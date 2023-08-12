@@ -35,6 +35,10 @@ class CreateRetrieveListDeleteUpdateAddressViewSet(mixins.CreateModelMixin,
     def get_queryset(self):
         return Address.objects.filter(user_id=self.request.user.id, deleted_at=None)
 
+    def get_object(self):
+        id_ = self.kwargs.get('pk')
+        return Address.objects.get(id=id_)
+
     def perform_create(self, serializer):
         serializer.validated_data['user'] = self.request.user
         serializer.save()
