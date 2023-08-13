@@ -49,6 +49,7 @@ class StoreSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(serializers.ModelSerializer):
     start_datetime = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
     end_datetime = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
+
     class Meta:
         model = Appointment
         fields = (
@@ -60,6 +61,24 @@ class AppointmentSerializer(serializers.ModelSerializer):
         )
         extra_kwargs = {
             'id': {'read_only': True},
+        }
+
+class ListAppointmentSerializer(serializers.ModelSerializer):
+    date = serializers.DateTimeField(format="%Y-%m-%d")
+
+    class Meta:
+        model = Appointment
+        fields = (
+            'id',
+            'store',
+            'service',
+            'start_datetime',
+            'end_datetime',
+            'date',
+        )
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'date': {'write_only': True},
         }
 
 
@@ -74,3 +93,16 @@ class ServiceSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id': {'read_only': True},
         }
+
+
+class AddServiceToStoreSerializer(serializers.Serializer):
+    store = serializers.IntegerField()
+    service = serializers.IntegerField()
+
+    def save(self, **kwargs):
+        store = self.validated_data['store']
+        service = self.validated_data['service']
+        service = Service.objects.get(id=service)
+        Store.objects.get(id=store).services.add(service)
+
+

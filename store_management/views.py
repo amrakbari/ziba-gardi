@@ -1,14 +1,16 @@
-from datetime import datetime
+from datetime import datetime, time
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import generics
+from rest_framework.views import APIView
 
 from store_management.models import UserProfile, Store, Appointment, Service
 from store_management.serializers import UserProfileSerializer, StoreSerializer, AppointmentSerializer, \
-    ServiceSerializer
+    ServiceSerializer, AddServiceToStoreSerializer
 
 
 class CurrentUserStoresList(generics.ListAPIView):
@@ -90,7 +92,6 @@ class CreateRetrieveListDestroyUpdateAppointment(mixins.CreateModelMixin,
                                                  mixins.RetrieveModelMixin,
                                                  mixins.ListModelMixin,
                                                  mixins.DestroyModelMixin,
-                                                 mixins.UpdateModelMixin,
                                                  viewsets.GenericViewSet):
     serializer_class = AppointmentSerializer
     permission_classes = [permissions.IsAuthenticated]  # TODO add is_stylist permission
@@ -104,3 +105,31 @@ class CreateRetrieveListService(mixins.CreateModelMixin,
     serializer_class = ServiceSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Service.objects.all()
+
+
+class AddServiceToStore(generics.CreateAPIView):
+    serializer_class = AddServiceToStoreSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetAppointmentsOfStore(generics.ListAPIView):
+    serializer_class = AppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        date = self.request.GET.get('date')
+        date = datetime.strptime(date, "%Y-%m-%d")
+        start_of_day = date
+        end_of_day = date.replace(hour=23, minute=59, second=59)
+        store_pk = self.kwargs['store_pk']
+        store = get_object_or_404(Store, id=store_pk)
+        return Appointment.objects.filter(store=store).filter(
+            Q(start_datetime__gte=start_of_day) & Q(start_datetime__lte=end_of_day) & Q(
+                end_datetime__gte=start_of_day) & Q(end_datetime__lte=end_of_day))

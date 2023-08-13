@@ -37,7 +37,7 @@ class Store(models.Model):
 
 
 class Appointment(models.Model):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True, default=None, blank=True)
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, default=None)
     start_datetime = models.DateTimeField()
