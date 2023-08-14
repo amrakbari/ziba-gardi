@@ -2,14 +2,19 @@ version: "3.9"
 
 services:
   db:
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
+    restart: always
+    image: postgres:14
+    ports:
+      - '65432:5432'
     env_file:
       - .env
+    volumes:
+      - db_data_2:/var/lib/postgresql/data
+    networks:
+      - bot_management_network
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8001
     volumes:
       - .:/code
     ports:
@@ -18,3 +23,10 @@ services:
       - .env
     depends_on:
       - db
+
+networks:
+  bot_management_network:
+
+volumes:
+  db_data_2:
+  db_data:
