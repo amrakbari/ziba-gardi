@@ -30,11 +30,14 @@ class CustomUser(AbstractUser):
     deleted_at = models.DateTimeField(default=None, null=True)
 
 
+class Neighbourhood(models.Model):
+    title = models.CharField(max_length=255)
+
+
 class Address(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField()
-    longitude = models.DecimalField(max_digits=22, decimal_places=16)
-    latitude = models.DecimalField(max_digits=22, decimal_places=16)
+    neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(default=None, null=True)

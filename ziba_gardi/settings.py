@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import dotenv
@@ -31,6 +32,7 @@ SECRET_KEY = config.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -48,11 +50,13 @@ INSTALLED_APPS = [
     'pytest_django',
     'accounts.apps.AccountsConfig',
     'store_management.apps.StoreManagementConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -131,7 +135,8 @@ SPECTACULAR_SETTINGS = {
 }
 DJOSER = {
     'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer'
+        'user_create': 'accounts.serializers.UserCreateSerializer',
+        'current_user': 'accounts.serializers.CurrentUserSerializer',
     },
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': config.get('DJOSER_ACTIVATION_URL'),
@@ -167,4 +172,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=2)
 }
