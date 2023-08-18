@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.views import APIView
 
+from accounts.models import CustomUser, Address, Neighbourhood
 from store_management.models import UserProfile, Store, Appointment, Service
 from store_management.serializers import UserProfileSerializer, StoreSerializer, AppointmentSerializer, \
     ServiceSerializer, AddServiceToStoreSerializer, GetAppointmentForUserSerializer, ProfileUserSerializer
@@ -144,6 +145,27 @@ class GetServicesOfStore(generics.ListAPIView):
         store = get_object_or_404(Store, id=store_pk)
         services = Service.objects.filter(store=store)
         return services
+
+
+class GetStoresByService(generics.ListAPIView):
+    serializer_class = StoreSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        service_pk = self.kwargs['service_pk']
+        service = get_object_or_404(Service, id=service_pk)
+        stores = Store.objects.filter(services=service)
+        return stores
+
+
+class GetNearbyStores(generics.ListAPIView):
+    serializer_class = StoreSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        address = Address.objects.get(id=self.kwargs['address_pk'])
+        stores = Store.objects.filter(address__neighbourhood=address.neighbourhood)
+        return stores
 
 
 class SetAppointmentForUser(generics.CreateAPIView):
