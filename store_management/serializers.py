@@ -55,6 +55,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'store',
+            'user',
             'service',
             'start_datetime',
             'end_datetime',
@@ -62,6 +63,42 @@ class AppointmentSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id': {'read_only': True},
         }
+
+
+class GetAppointmentForUserSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Appointment
+        fields = (
+            'id',
+            'user',
+            'service',
+            'store',
+            'start_datetime',
+            'end_datetime',
+        )
+        extra_kwargs = {
+            'store': {'read_only': True},
+            'user': {'read_only': True},
+            'start_datetime': {'read_only': True},
+            'end_datetime': {'read_only': True},
+        }
+
+    def save(self, **kwargs):
+        request = self.context.get('request')
+        appointment_id = self.validated_data['id']
+        service = self.validated_data['service']
+        user_id = request.user.id
+
+        user = UserProfile.objects.get(user_id=user_id)
+
+        appointment = Appointment.objects.filter(id=appointment_id).update(
+            user=user,
+            service=service
+        )
+        return appointment
+
 
 class ListAppointmentSerializer(serializers.ModelSerializer):
     date = serializers.DateTimeField(format="%Y-%m-%d")
@@ -106,3 +143,16 @@ class AddServiceToStoreSerializer(serializers.Serializer):
         Store.objects.get(id=store).services.add(service)
 
 
+class ProfileUserSerializer(serializers.ModelSerializer):
+    profile = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'id',
+            'email',
+            'profile',
+        )
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }

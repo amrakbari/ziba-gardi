@@ -8,9 +8,10 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.views import APIView
 
+from accounts.models import CustomUser, Address, Neighbourhood
 from store_management.models import UserProfile, Store, Appointment, Service
 from store_management.serializers import UserProfileSerializer, StoreSerializer, AppointmentSerializer, \
-    ServiceSerializer, AddServiceToStoreSerializer
+    ServiceSerializer, AddServiceToStoreSerializer, GetAppointmentForUserSerializer, ProfileUserSerializer
 
 
 class CurrentUserStoresList(generics.ListAPIView):
@@ -133,3 +134,50 @@ class GetAppointmentsOfStore(generics.ListAPIView):
         return Appointment.objects.filter(store=store).filter(
             Q(start_datetime__gte=start_of_day) & Q(start_datetime__lte=end_of_day) & Q(
                 end_datetime__gte=start_of_day) & Q(end_datetime__lte=end_of_day))
+
+
+class GetServicesOfStore(generics.ListAPIView):
+    serializer_class = ServiceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        store_pk = self.kwargs['store_pk']
+        store = get_object_or_404(Store, id=store_pk)
+        services = Service.objects.filter(store=store)
+        return services
+
+
+class GetStoresByService(generics.ListAPIView):
+    serializer_class = StoreSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        service_pk = self.kwargs['service_pk']
+        service = get_object_or_404(Service, id=service_pk)
+        stores = Store.objects.filter(services=service)
+        return stores
+
+
+class GetNearbyStores(generics.ListAPIView):
+    serializer_class = StoreSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        address = Address.objects.get(id=self.kwargs['address_pk'])
+        stores = Store.objects.filter(address__neighbourhood=address.neighbourhood)
+        return stores
+
+
+class SetAppointmentForUser(generics.CreateAPIView):
+    serializer_class = GetAppointmentForUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class GetUserFromProfile(generics.RetrieveAPIView):
+    serializer_class = ProfileUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        profile_pk = self.kwargs['profile_pk']
+        user = UserProfile.objects.get(pk=profile_pk).user
+        return user
