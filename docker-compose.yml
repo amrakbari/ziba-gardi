@@ -23,6 +23,7 @@ services:
       - .env
     depends_on:
       - db
+    restart: always
     networks:
       - bot_management_network
 
