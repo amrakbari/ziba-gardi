@@ -23,6 +23,8 @@ services:
       - .env
     depends_on:
       - db
+    networks:
+      - bot_management_network
 
 networks:
   bot_management_network:
